@@ -7,8 +7,7 @@ import os
 CURRENT_PATH = os.path.dirname(os.path.abspath(__file__))
 FILES = "files"
 
-
-ALL_DF_PATH = os.path.join(CURRENT_PATH, FILES, "Bobs_dash_df.csv")
+#ALL_DF_PATH = os.path.join(CURRENT_PATH, FILES, "Bobs_dash_df.csv")
 PRODUCT_SALES_12_PATH = os.path.join(CURRENT_PATH, FILES, "sales_12.csv")
 PRODUCT_SALES_6_PATH = os.path.join(CURRENT_PATH, FILES, "sales_6.csv")
 PRODUCT_SALES_3_PATH = os.path.join(CURRENT_PATH, FILES, "sales_3.csv")
@@ -18,11 +17,19 @@ GDF_PATH = os.path.join(CURRENT_PATH, FILES, "Spain_regions.geojson")
 
 apr = pd.read_csv(ACTIVE_PER_REGION_PATH)
 gdf = gpd.read_file(GDF_PATH)
-df_bob = pd.read_csv(ALL_DF_PATH)
+#df_bob = pd.read_csv(ALL_DF_PATH)
 asr = pd.read_csv(SALES_REGION_PATH)
 prod_sales_12 = pd.read_csv(PRODUCT_SALES_12_PATH)
 prod_sales_6 = pd.read_csv(PRODUCT_SALES_6_PATH)
 prod_sales_3 = pd.read_csv(PRODUCT_SALES_3_PATH)
+df_bob = pd.read_csv("https://storage.googleapis.com/easymoneybobsdata/Bobs_dash_df.csv")
+
+#apr = pd.read_csv("https://github.com/shogoBCN/pub_data/blob/main/active_per_region.csv?raw=true")
+#gdf = gpd.read_file("https://github.com/shogoBCN/pub_data/blob/main/Spain_regions.geojson?raw=true")
+#asr = pd.read_csv("https://github.com/shogoBCN/pub_data/blob/main/all_sales_region.csv?raw=true")
+#prod_sales_12 = pd.read_csv("https://github.com/shogoBCN/pub_data/blob/main/sales_12.csv?raw=true")
+#prod_sales_6 = pd.read_csv("https://github.com/shogoBCN/pub_data/blob/main/sales_6.csv?raw=true")
+#prod_sales_3 = pd.read_csv("https://github.com/shogoBCN/pub_data/blob/main/sales_3.csv?raw=true")
 
 table_dist_dict = [ {"label": item, "value": item} for item in ["All Users", "New Users", "Stock Users"] ]
 region_dict = [{"label": region, 'value': region} for region in asr["region"].unique()]
