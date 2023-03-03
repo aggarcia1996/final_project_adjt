@@ -1,7 +1,6 @@
 import warnings
 warnings.simplefilter(action = "ignore", category = FutureWarning)
 
-import numpy as np
 import pandas as pd
 pd.options.mode.chained_assignment = None
 
@@ -365,4 +364,5 @@ def plot_product_progression(product):
 
 
 if __name__ == "__main__":
-    app.run_server(debug=True, port=8088)
+    #app.run_server(debug = True, port = 8088)
+    app.run_server(debug = False, host = "0.0.0.0", port = 80)
