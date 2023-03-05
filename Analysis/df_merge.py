@@ -9,4 +9,4 @@ df_2.drop(columns = ["Unnamed: 0", "pk_cid", "pk_partition"], inplace = True)
 df_3.drop(columns = ["Unnamed: 0", "pk_cid", "pk_partition"], inplace = True)
 
 df = pd.concat([df_1, df_2, df_3], axis = 1)
-df.to_csv("Bobs_df.csv")
+df.to_csv("../data/Bobs_df.csv")
