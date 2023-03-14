@@ -12,13 +12,14 @@ from plotly.subplots import make_subplots
 import dash
 from dash import dcc, dash_table, html, Output, Input
 
-from variables import df_bob, products, prod_sales_12, prod_sales_6, prod_sales_3, region_dict, asr, gdf_fig, apr
+from variables import df_bob, products, prod_sales_12, prod_sales_6, prod_sales_3, region_dict, asr, gdf_fig, apr, kpi_one_fig, KPI_Two_fig
 from bs_comps import button_group, time_radios
 
 
 app = dash.Dash(
     __name__, 
-    suppress_callback_exceptions = True)
+    suppress_callback_exceptions = True,
+    title = "EasyMoney Dashboard")
 server = app.server
 
 app.layout = html.Div([   
@@ -46,7 +47,7 @@ app.layout = html.Div([
                             className = "custom-tab", selected_className = "custom-tab--selected"
                             ),
                         dcc.Tab(
-                            label = "Users", value = "users",
+                            label = "KPIs", value = "kpis",
                             className = "custom-tab", selected_className = "custom-tab--selected")]),   
                 html.Div(id = "tabs_content")])])
 
@@ -89,7 +90,7 @@ def render_content(tab):
                                         html.Label(
                                             className= "feedback_number_label",
                                             children = [
-                                                "Active Users",
+                                                "Σ Users",
                                                 html.Div(
                                                 className="feedback_number_frame",
                                                 children = [html.Span(id = "users_number")])]),
@@ -97,7 +98,7 @@ def render_content(tab):
                                         html.Label(
                                             className= "feedback_number_label",
                                             children = [
-                                                "Total Sales",
+                                                "Σ Product Sales",
                                                 html.Div(
                                                 className="feedback_number_frame",
                                                 children = [html.Span(id = "sales_number")])])]),
@@ -109,7 +110,7 @@ def render_content(tab):
                                         html.Label(
                                             className= "feedback_number_label",
                                             children = [
-                                                "Average Age",
+                                                "Ø Age",
                                                 html.Div(
                                                 className="feedback_number_frame",
                                                 children = [html.Span(id = "age_number")])]),
@@ -117,7 +118,7 @@ def render_content(tab):
                                         html.Label(
                                             className= "feedback_number_label",
                                             children = [
-                                                "Retention Rate",
+                                                "Ø Retention",
                                                 html.Div(
                                                 className="feedback_number_frame",
                                                 children = [html.Span(id = "reten_number")])])])])]), 
@@ -149,12 +150,12 @@ def render_content(tab):
             className = "content_frame parent-container",
             children = [
                 html.Div(className = "Spacer"),
-                html.Div(
-                className = "centered_element",
-                children = [
-                    html.Div(
-                    className = "horizontal_control",
-                    children = [html.Div(button_group)])]),
+                #html.Div(
+                #className = "centered_element",
+                #children = [
+                #    html.Div(
+                #    className = "horizontal_control",
+                #    children = [html.Div(button_group)])]),
                     html.Div(
                         className = "horizontal_control parent-container",
                         children = [html.Div(time_radios)]),    
@@ -193,8 +194,31 @@ def render_content(tab):
                                     children = [dcc.Graph(id = "progression_graph")])])])])
     
 
-    if tab == "users":
-        return html.Div("U_S_E_R_S")
+    if tab == "kpis":
+        return html.Div(
+            className = "content_frame parent-container",
+            children = [
+                html.Div(className = "Spacer"),
+                html.Div(
+                    className = "parent-container",
+                    children = [
+                        html.Div(className = "Spacer_12"),
+                        html.Div(
+                            className="content-container_prods",
+                            children = [
+                                html.Div(                             
+                                    className = "card_frame",
+                                    style = {"margin-right": "10px"},
+                                    children = [dcc.Graph(
+                                        id = "KPI_one", figure = kpi_one_fig)])]),
+                        html.Div(
+                            className="content-container_prods",
+                            children = [
+                                html.Div(                             
+                                    className = "card_frame",
+                                    style = {"margin-right": "10px"},
+                                    children = [dcc.Graph(
+                                        id = "KPI_two", figure = KPI_Two_fig)])])])])
 
 
 #################################
@@ -210,8 +234,7 @@ def plot_all_sales(region):
 
     trace = go.Bar(
         x = data.index, 
-        y = data.values,
-        text = data.values)
+        y = data.values)
     layout = go.Layout(
         title = dict(text = f"{region}: Top Sellers", x = 0.5),
         yaxis = dict(title = "Sales Count"),
@@ -238,7 +261,7 @@ def plot_all_sales(region):
         title = dict(text = "Age Distribution by Application Activity", x = 0.5),
         yaxis = dict(title = "User Count"),
         bargap = 0.1, height = 300, autosize = True,
-        margin = {'t': 60, "b": 10, "l": 2, "r": 2},
+        margin = {'t': 67, "b": 10, "l": 2, "r": 2},
         legend = dict(orientation = "h", yanchor = "bottom", y = 1.02, xanchor = "right", x = 1))
     return fig
 
@@ -281,9 +304,9 @@ def update_total_fb(region):
 # product sales count
 @app.callback(
     Output("product_sales_graph", "figure"),
-    [Input("user_type_buttons", "value"),
+    [#Input("user_type_buttons", "value"),
      Input("user_type_buttons_2", "value")])
-def plot_all_sales(user_type, time_):
+def plot_all_sales(time_):
 
     if time_ == "1 year":
         data = prod_sales_12
@@ -294,11 +317,11 @@ def plot_all_sales(user_type, time_):
 
     trace = go.Bar(
         x = data["Unnamed: 0"], 
-        y = data[user_type],
-        text = data[user_type])
+        y = data["All Users"],
+        text = data["All Users"])
     layout = go.Layout(
-        title = dict(text = f"{user_type}: Top Sellers", x = 0.5),
-        yaxis = dict(title = "Sales Count"),
+        title = dict(text = f"Overall Product Activity Count", x = 0.5),
+        yaxis = dict(title = "Product Activities"),
         autosize = True,
         height = 225,
         margin = {'t': 32, "b": 10, "l": 2, "r": 2})
@@ -317,8 +340,8 @@ def plot_product_retention(product):
             y = df_temp[product], 
             mode = "lines")
     layout = go.Layout(
-        title = dict(text = f"{product} Retention", x = 0.5),
-        yaxis = dict(title = "Active Subscriptions"),
+        title = dict(text = "Accumulative Activity Count", x = 0.5),
+        yaxis = dict(title = "Revenue Generating Activities"),
         autosize = True,
         height = 225,
         margin = {'t': 32, "b": 10, "l": 2, "r": 2})
@@ -340,17 +363,17 @@ def plot_product_progression(product):
         y = df_temp[product], 
         mode = "lines")
     layout = go.Layout(
-        title = dict(text = f"{product} Sales Progression", x = 0.5),
-        yaxis = dict(title = "Sold Products"),
+        title = dict(text = "Monthly Product Engagement", x = 0.5),
+        yaxis = dict(title = "Revenue Generating Activities"),
         autosize = True,
         height = 225,
         margin = {'t': 32, "b": 10, "l": 2, "r": 2})
-    fig = go.Figure(data=[trace], layout = layout)
+    fig = go.Figure(data = [trace], layout = layout)
     fig.update_traces(marker = dict(color = "MediumSeaGreen"))    
     return fig    
     
 #################################
-## USERS
+## KPIs
 #################################
 
 
