@@ -22,7 +22,27 @@ asr = pd.read_csv(SALES_REGION_PATH)
 prod_sales_12 = pd.read_csv(PRODUCT_SALES_12_PATH)
 prod_sales_6 = pd.read_csv(PRODUCT_SALES_6_PATH)
 prod_sales_3 = pd.read_csv(PRODUCT_SALES_3_PATH)
-df_bob = pd.read_csv("https://storage.googleapis.com/easymoneybobsdata/Bobs_dash_df.csv")
+df_bob = pd.read_csv("https://storage.googleapis.com/easymoneybobsdata/Bobs_dash_df.csv", 
+                 dtype = {
+                    "age": "uint8", 
+                    "pk_cid": "object",
+                    "pk_partition": "object",
+                    "entry_date": "object",
+                    "loans": "uint8",
+                    "mortgage": "uint8",
+                    "long_term_deposit": "uint8",
+                    "short_term_deposit": "uint8",
+                    "funds": "uint8",
+                    "securities": "uint8",
+                    "credit_card": "uint8",
+                    "pension_plan": "uint8",
+                    "payroll_account": "uint8",
+                    "emc_account": "uint8",
+                    "debit_card": "uint8",
+                    "em_acount": "uint8",
+                    "active_customer": "uint8",
+                    "region": "object",
+                    "month_year": "object"})
 
 #apr = pd.read_csv("https://github.com/shogoBCN/pub_data/blob/main/active_per_region.csv?raw=true")
 #gdf = gpd.read_file("https://github.com/shogoBCN/pub_data/blob/main/Spain_regions.geojson?raw=true")

@@ -340,9 +340,11 @@ def plot_product_retention(product):
     [Input('product_dropdown', 'value')])
 def plot_product_progression(product):
     df_temp = df_bob.groupby('month_year').agg({product: 'sum', 'entry_date': 'max'})
+    df_temp["entry_date"] = pd.to_datetime(df_temp["entry_date"])
+    df_temp = df_temp[df_temp["entry_date"] > "2018-01-01"]
     df_temp = df_temp.sort_values(by = "entry_date", ascending = True)
     trace = go.Scatter(
-        x = df_temp.index, 
+        x = df_temp["entry_date"], 
         y = df_temp[product], 
         mode = "lines")
     layout = go.Layout(
