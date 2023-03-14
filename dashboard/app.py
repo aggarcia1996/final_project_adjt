@@ -228,26 +228,18 @@ def plot_all_sales(region):
     [Input("region_dropdown", "value")])
 def plot_all_sales(region):
 
-    data = asr[asr["region"] == region].groupby(["pk_partition"])["sales"].sum().sort_index(ascending = False)
-
-    trace = go.Bar(
-        x = data.index, 
-        y = data.values,
-        text = data.values,)
-    trace_2 = go.Scatter(
-        x = data.index, 
-        y = data.values,
-        mode = "lines",
-        opacity = 0.5)
-    layout = go.Layout(
-        title = dict(text = f"{region}: Over Time Sales", x = 0.5),
-        yaxis = dict(title = "Total Sales Count"),
-        autosize = True,
-        showlegend = False,
-        height = 300,
-        margin = {'t': 32, "b": 10, "l": 2, "r": 2})
-    fig = go.Figure(data = [trace, trace_2], layout = layout)    
-    fig.update_traces(marker = dict(color = "MediumSeaGreen")) 
+    data = df_bob[df_bob["region"] == region].groupby(["pk_cid"]).agg({"age": "max", "active_customer": "max"})
+    fig = go.Figure()
+    fig.add_trace(go.Histogram(x = data[data["active_customer"] == 1]["age"], nbinsx = 20, name = "Active Customer",
+                            marker = dict(color = "MediumSeaGreen")))
+    fig.add_trace(go.Histogram(x = data[data["active_customer"] == 0]["age"], nbinsx = 20, name = "Inactive Customer",
+                            marker = dict(color = "#ABEBC6")))
+    fig.update_layout(
+        title = dict(text = "Age Distribution by Application Activity", x = 0.5),
+        yaxis = dict(title = "User Count"),
+        bargap = 0.1, height = 300, autosize = True,
+        margin = {'t': 60, "b": 10, "l": 2, "r": 2},
+        legend = dict(orientation = "h", yanchor = "bottom", y = 1.02, xanchor = "right", x = 1))
     return fig
 
 @app.callback(
